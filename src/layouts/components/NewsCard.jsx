@@ -2,9 +2,11 @@
 import React from "react";
 import { FaEye, FaStar } from "react-icons/fa";
 import { FiBookmark, FiShare2 } from "react-icons/fi";
+import { Link } from "react-router";
 
 const NewsCard = ({ news, onBookmark, onShare }) => {
     const {
+        id,
         title,
         author,
         thumbnail_url,
@@ -73,9 +75,11 @@ const NewsCard = ({ news, onBookmark, onShare }) => {
                     {details.length > 150 ? (
                         <>
                             {details.slice(0, 150)}...
-                            <span className="text-amber-600 font-bold cursor-pointer ml-3 hover:underline">
+                            <Link
+                                to={`/news-details/${id}`}
+                                className="text-amber-600 font-bold cursor-pointer ml-3 hover:underline">
                                 Read More
-                            </span>
+                            </Link>
                         </>
                     ) : (
                         details
