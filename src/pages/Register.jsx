@@ -1,16 +1,24 @@
-import React, { use } from 'react';
+import React, { use, useState } from 'react';
 import { Link } from 'react-router';
 import { AuthContext } from '../provider/AuthProvider';
 
 const Register = () => {
 
     const { createUser , setUser} = use(AuthContext)
+    const [nameError, setNameError] = useState("");
 
     const handleRegister = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
-        // const name = e.target.name.value;
+        const name = e.target.name.value;
+        if(name.length < 5 ){
+            setNameError("Name should be more than 5 character!")
+            return;
+        }
+        else{
+            setNameError("")
+        }
         // const photo = e.target.photo.value;
 
         createUser(email, password)
@@ -61,6 +69,9 @@ const Register = () => {
                         <button
                             type='submit'
                             className="btn btn-neutral mt-4">Register</button>
+                            {
+                                nameError ? <p className='text-red-700'>{nameError} </p> : ''
+                            }
 
                         <p className='text-gray-800 text-[14 px] py-5 text-center'>Already Have An Account ?
                             <Link to={'/auth/login'} className='text-secondary underline'> Login</Link></p>
