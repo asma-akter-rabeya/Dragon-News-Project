@@ -1,22 +1,25 @@
 import React, { use, useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { AuthContext } from '../provider/AuthProvider';
 
 const Register = () => {
 
-    const { createUser , setUser} = use(AuthContext)
+    const { createUser, setUser, updateUser } = use(AuthContext)
     const [nameError, setNameError] = useState("");
+
+    const navigate = useNavigate();
 
     const handleRegister = (e) => {
         e.preventDefault();
         const email = e.target.email.value;
         const password = e.target.password.value;
         const name = e.target.name.value;
-        if(name.length < 5 ){
+        const photo = e.target.photo.value;
+        if (name.length < 5) {
             setNameError("Name should be more than 5 character!")
             return;
         }
-        else{
+        else {
             setNameError("")
         }
         // const photo = e.target.photo.value;
@@ -24,8 +27,19 @@ const Register = () => {
         createUser(email, password)
             .then(result => {
                 const user = result.user;
-                // console.log(user)
-                setUser(user)
+                console.log(user.user)
+                updateUser({
+                    displayName: name,
+                    photoURL: photo
+
+                }).then(() => {
+
+                    setUser({ ...user, displayName: name, photoURL: photo })
+                    navigate('/');
+                })
+                    .catch((error) => {
+                        console.log(error)
+                    });
             })
             .catch((error) => {
                 // const errorCode = error.code;
@@ -69,9 +83,9 @@ const Register = () => {
                         <button
                             type='submit'
                             className="btn btn-neutral mt-4">Register</button>
-                            {
-                                nameError ? <p className='text-red-700'>{nameError} </p> : ''
-                            }
+                        {
+                            nameError ? <p className='text-red-700'>{nameError} </p> : ''
+                        }
 
                         <p className='text-gray-800 text-[14 px] py-5 text-center'>Already Have An Account ?
                             <Link to={'/auth/login'} className='text-secondary underline'> Login</Link></p>
